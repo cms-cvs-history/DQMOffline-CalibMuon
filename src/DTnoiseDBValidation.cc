@@ -2,8 +2,8 @@
 /*
  *  See header file for a description of this class.
  *
- *  $Date: 2009/03/10 16:54:12 $
- *  $Revision: 1.3 $
+ *  $Date: 2009/03/10 15:08:59 $
+ *  $Revision: 1.2 $
  *  \author G. Mila - INFN Torino
  */
 
@@ -60,7 +60,15 @@ DTnoiseDBValidation::DTnoiseDBValidation(const ParameterSet& pset) {
 
 DTnoiseDBValidation::~DTnoiseDBValidation(){}
 
-void DTnoiseDBValidation::beginRun(const edm::Run& run, const EventSetup& setup) {
+
+void DTnoiseDBValidation::beginJob(const EventSetup& setup) {
+
+
+  metname = "noiseDbValidation";
+  LogTrace(metname)<<"[DTnoiseDBValidation] Parameters initialization";
+ 
+  outputFileName = parameters.getUntrackedParameter<std::string>("OutputFileName");
+
   ESHandle<DTStatusFlag> noise_Ref;
   setup.get<DTStatusFlagRcd>().get(labelDBRef, noise_Ref);
   noiseRefMap = &*noise_Ref;
@@ -71,15 +79,6 @@ void DTnoiseDBValidation::beginRun(const edm::Run& run, const EventSetup& setup)
 
   // Get the geometry
   setup.get<MuonGeometryRecord>().get(dtGeom);
-}
-
-void DTnoiseDBValidation::beginJob() {
-
-
-  metname = "noiseDbValidation";
-  LogTrace(metname)<<"[DTnoiseDBValidation] Parameters initialization";
- 
-  outputFileName = parameters.getUntrackedParameter<std::string>("OutputFileName");
 
   noisyCells_Ref=0;
   noisyCells_toTest=0;
